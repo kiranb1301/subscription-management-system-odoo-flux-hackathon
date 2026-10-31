@@ -60,3 +60,12 @@ def make_staff(session_factory):
         return password
 
     return _make
+
+@pytest.fixture(autouse=True)
+def _no_real_email(monkeypatch):
+    """Never send real mail in tests; capture messages in the console-mode outbox."""
+    from app.services import email_service
+    from app.settings import settings
+
+    monkeypatch.setattr(settings, "SMTP_HOST", "")
+    email_service.outbox.clear()

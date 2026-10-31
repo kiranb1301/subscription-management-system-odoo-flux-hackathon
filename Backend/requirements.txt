@@ -1,4 +1,4 @@
-fastapi
+﻿fastapi
 uvicorn
 sqlalchemy
 pydantic-settings
@@ -11,4 +11,8 @@ redis
 pytest
 httpx
 pymysql
-cryptographyalembic
+cryptography
+alembic
+apscheduler
+tzdata
+reportlab
