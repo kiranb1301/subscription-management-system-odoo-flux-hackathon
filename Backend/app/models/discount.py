@@ -23,6 +23,8 @@ class Discount(IdMixin, TimestampMixin, Base):
     usage_limit: Mapped[Optional[int]] = mapped_column(Integer)
     per_customer_limit: Mapped[Optional[int]] = mapped_column(Integer)
     min_purchase_amount: Mapped[Optional[Decimal]] = mapped_column(Money)
+    min_quantity: Mapped[Optional[int]] = mapped_column(Integer)
+    used_count: Mapped[int] = mapped_column(Integer, default=0, server_default="0", nullable=False)
     is_active: Mapped[bool] = mapped_column(Boolean, default=True, nullable=False)
 
     product_mappings: Mapped[list["DiscountProductMapping"]] = relationship(
