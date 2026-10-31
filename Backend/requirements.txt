@@ -10,3 +10,5 @@ celery
 redis
 pytest
 httpx
+pymysql
+cryptography
