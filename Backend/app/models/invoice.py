@@ -1,8 +1,7 @@
 from datetime import date, datetime
 from decimal import Decimal
 from typing import Optional
-
-from sqlalchemy import Date, DateTime, ForeignKey, Index, Integer, String, Text
+from sqlalchemy import Date, DateTime, ForeignKey, Index, Integer, String, Text, UniqueConstraint
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.db.base import (
@@ -21,7 +20,15 @@ from app.models.enums import InvoiceStatus
 
 class Invoice(IdMixin, TimestampMixin, SoftDeleteMixin, Base):
     __tablename__ = "invoices"
-    __table_args__ = (Index("ix_invoices_status_due_date", "status", "due_date"),)
+    __table_args__ = (
+        Index("ix_invoices_status_due_date", "status", "due_date"),
+        UniqueConstraint(
+            "subscription_id",
+            "billing_period_start",
+            "billing_period_end",
+            name="uq_subscription_billing_period",
+        ),
+    )
 
     invoice_number: Mapped[str] = mapped_column(String(50), unique=True, nullable=False)
     subscription_id: Mapped[int] = mapped_column(
@@ -32,8 +39,8 @@ class Invoice(IdMixin, TimestampMixin, SoftDeleteMixin, Base):
     )
     invoice_date: Mapped[date] = mapped_column(Date, nullable=False, index=True)
     due_date: Mapped[date] = mapped_column(Date, nullable=False)
-    billing_period_start: Mapped[Optional[date]] = mapped_column(Date)
-    billing_period_end: Mapped[Optional[date]] = mapped_column(Date)
+    billing_period_start: Mapped[date] = mapped_column(Date, nullable=False)
+    billing_period_end: Mapped[date] = mapped_column(Date, nullable=False)
     subtotal: Mapped[Decimal] = mapped_column(Money, default=Decimal("0.00"), nullable=False)
     discount_amount: Mapped[Decimal] = mapped_column(Money, default=Decimal("0.00"), nullable=False)
     tax_amount: Mapped[Decimal] = mapped_column(Money, default=Decimal("0.00"), nullable=False)
