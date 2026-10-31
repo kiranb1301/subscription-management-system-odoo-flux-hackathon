@@ -8,6 +8,12 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.db.base import Base, BigInt, IdMixin, Money, TimestampMixin, enum_type, utcnow
 from app.models.enums import PaymentMethod, PaymentStatus
 
+from typing import TYPE_CHECKING, Optional
+
+if TYPE_CHECKING:
+    from app.models.customer import Customer
+    from app.models.invoice import Invoice
+    
 
 class Payment(IdMixin, TimestampMixin, Base):
     __tablename__ = "payments"

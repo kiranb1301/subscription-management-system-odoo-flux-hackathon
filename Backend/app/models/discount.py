@@ -8,6 +8,13 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.db.base import Base, BigInt, IdMixin, Money, TimestampMixin, enum_type, utcnow
 from app.models.enums import DiscountType
 
+from typing import TYPE_CHECKING, Optional
+
+if TYPE_CHECKING:
+    from app.models.customer import Customer
+    from app.models.invoice import Invoice
+    from app.models.product import Product
+    from app.models.subscription import Subscription
 
 class Discount(IdMixin, TimestampMixin, Base):
     __tablename__ = "discounts"

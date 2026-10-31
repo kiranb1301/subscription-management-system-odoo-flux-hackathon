@@ -17,6 +17,14 @@ from app.db.base import (
 )
 from app.models.enums import InvoiceStatus
 
+from typing import TYPE_CHECKING, Optional
+
+if TYPE_CHECKING:
+    from app.models.customer import Customer
+    from app.models.payment import PaymentAllocation
+    from app.models.subscription import Subscription
+    
+    
 
 class Invoice(IdMixin, TimestampMixin, SoftDeleteMixin, Base):
     __tablename__ = "invoices"
