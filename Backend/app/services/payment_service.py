@@ -15,6 +15,7 @@ from app.models.enums import PaymentMethod, PaymentStatus as P
 from app.schemas.payment import PaymentAllocationResponse, PaymentCreate, PaymentResponse
 from app.services.access import authorize_customer_access, get_customer_id_for_user
 from app.services.invoice_service import _note, _record, mark_overdue
+from app.services.notification_service import notify
 from app.services.pricing import money
 
 PAYABLE = (I.CONFIRMED, I.PARTIALLY_PAID, I.OVERDUE)
@@ -212,6 +213,9 @@ def record_payment(db: Session, user: User, data: PaymentCreate) -> Payment:
             )
             inv.paid_amount = money(inv.paid_amount + amount)
             _sync_invoice(db, inv, user.id, f"Payment {payment.payment_reference} of {amount} received")
+        notify(db, customer_id, "Payment received",
+               f"We received your payment {payment.payment_reference} of {payment.amount}.",
+               "payment", payment.id)
         db.commit()
     except IntegrityError:
         db.rollback()
@@ -235,5 +239,8 @@ def refund_payment(db: Session, user: User, payment_id: int, reason: str | None)
     payment.status = P.REFUNDED
     line = f"Refunded: {reason}" if reason else "Refunded"
     payment.note = f"{payment.note}\n{line}" if payment.note else line
+    notify(db, payment.customer_id, "Payment refunded",
+           f"Your payment {payment.payment_reference} of {payment.amount} was refunded.",
+           "payment", payment.id)
     db.commit()
     return get_payment(db, payment.id)

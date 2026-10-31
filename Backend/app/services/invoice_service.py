@@ -27,6 +27,7 @@ from app.schemas.invoice import InvoiceResponse, InvoiceUpdate
 from app.services.access import authorize_customer_access, get_customer_id_for_user
 from app.services.dates import advance_date
 from app.services.helpers import clean_changes
+from app.services.notification_service import notify
 from app.services.pricing import line_amounts, money
 from app.services.subscription_service import expire_due
 
@@ -152,6 +153,9 @@ def mark_overdue(db: Session) -> None:
     ).all()
     for inv in rows:
         _record(db, inv, I.OVERDUE, None, "Past due date")
+        notify(db, inv.customer_id, "Invoice overdue",
+               f"Invoice {inv.invoice_number} was due on {inv.due_date} and is now overdue.",
+               "invoice", inv.id)
     if rows:
         db.commit()
 
@@ -556,6 +560,9 @@ def confirm_invoice(db: Session, user: User, invoice_id: int) -> Invoice:
         _record(db, inv, I.PAID, user.id, "Confirmed with nothing to pay")
     else:
         _record(db, inv, I.CONFIRMED, user.id, "Confirmed")
+        notify(db, inv.customer_id, "Invoice confirmed",
+               f"Invoice {inv.invoice_number} for {inv.total_amount} is confirmed and due on {inv.due_date}.",
+               "invoice", inv.id)
     db.commit()
     return get_invoice(db, inv.id)
 
