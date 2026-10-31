@@ -41,3 +41,8 @@ api_router.include_router(_payments_routes.router, prefix="/payments", tags=["Pa
 from app.api.v1.routes import reports as _reports_routes  # noqa: E402
 
 api_router.include_router(_reports_routes.router, prefix="/reports", tags=["Reports"])
+
+
+from app.api.v1.routes import notifications as _notifications_routes  # noqa: E402
+
+api_router.include_router(_notifications_routes.router, prefix="/notifications", tags=["Notifications"])
