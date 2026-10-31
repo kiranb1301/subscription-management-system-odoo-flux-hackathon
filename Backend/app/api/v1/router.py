@@ -8,6 +8,7 @@ from app.api.v1.routes import (
     products,
     quotation_templates,
     quotations,
+    subscriptions,
     taxes,
     users,
 )
@@ -24,3 +25,4 @@ api_router.include_router(
     quotation_templates.router, prefix="/quotation-templates", tags=["Quotation templates"]
 )
 api_router.include_router(quotations.router, prefix="/quotations", tags=["Quotations"])
+api_router.include_router(subscriptions.router, prefix="/subscriptions", tags=["Subscriptions"])
