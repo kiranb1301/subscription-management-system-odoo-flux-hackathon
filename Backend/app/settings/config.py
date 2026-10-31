@@ -17,6 +17,18 @@ class Settings(BaseSettings):
 
     REDIS_URL: str = "redis://localhost:6379/0"
 
+    FRONTEND_URL: str = "http://localhost:4200"
+    PASSWORD_RESET_EXPIRE_MINUTES: int = 30
+    EMAIL_VERIFY_EXPIRE_HOURS: int = 24
+
+    # Leave SMTP_HOST empty to print emails to the console instead of sending them
+    SMTP_HOST: str = ""
+    SMTP_PORT: int = 587
+    SMTP_USER: str = ""
+    SMTP_PASSWORD: str = ""
+    SMTP_FROM: str = "no-reply@brightloop.local"
+    SMTP_USE_TLS: bool = True
+
     model_config = SettingsConfigDict(env_file=".env", extra="ignore")
 
 
