@@ -2,8 +2,11 @@ from fastapi import APIRouter
 
 from app.api.v1.routes import (
     auth,
+    billing,
     customers,
+    discounts,
     health,
+    invoices,
     plans,
     products,
     quotation_templates,
@@ -26,3 +29,6 @@ api_router.include_router(
 )
 api_router.include_router(quotations.router, prefix="/quotations", tags=["Quotations"])
 api_router.include_router(subscriptions.router, prefix="/subscriptions", tags=["Subscriptions"])
+api_router.include_router(discounts.router, prefix="/discounts", tags=["Discounts"])
+api_router.include_router(invoices.router, prefix="/invoices", tags=["Invoices"])
+api_router.include_router(billing.router, prefix="/billing", tags=["Billing"])
