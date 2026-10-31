@@ -29,6 +29,12 @@ class Settings(BaseSettings):
     SMTP_FROM: str = "no-reply@brightloop.local"
     SMTP_USE_TLS: bool = True
 
+    # Daily billing, overdue marking and reminders. Enable on ONE process only.
+    SCHEDULER_ENABLED: bool = False
+    SCHEDULER_HOUR: int = 2
+    SCHEDULER_MINUTE: int = 0
+    SCHEDULER_TIMEZONE: str = "Asia/Kolkata"
+
     model_config = SettingsConfigDict(env_file=".env", extra="ignore")
 
 
